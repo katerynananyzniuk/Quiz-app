@@ -11,8 +11,8 @@ function ActivQuiz({
     state 
 }) {
     return (
-        <div className={classes.ActivQuiz}>
-            <p className={classes.Question}>
+        <div className={classes.activQuiz}>
+            <p className={classes.question}>
                 <span>
                     <strong>{ questionNumber }.</strong>&nbsp;
                     { question }

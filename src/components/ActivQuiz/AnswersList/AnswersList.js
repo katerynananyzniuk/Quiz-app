@@ -5,7 +5,7 @@ import AnswerItem from './AnswerItem/AnswerItem'
 
 function AnswersList({ answers, onAnswerClick, rightAnswer, state }) { 
     return(
-        <ul className={classes.AnswersList}>
+        <ul className={classes.answersList}>
             { answers.map( answer => {
                 return (
                     <AnswerItem 

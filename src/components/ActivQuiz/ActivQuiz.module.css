@@ -1,4 +1,4 @@
-.ActivQuiz {
+.activQuiz {
     padding: 20px;
     color: #fff;
     border: 2px solid #fff;
@@ -6,7 +6,7 @@
     margin: 0 10px;
 }
 
-.Question {
+.question {
     display: flex;
     justify-content: space-between;
 }

@@ -31,13 +31,19 @@ function Quiz() {
     const [quiz, setQuiz] = useState(defaultQuiz)
     const [activeQuestion, setActiveQuestion] = useState(0)
     const [answerState, setAnswerState] = useState(null) // { [id] : 'success' 'error' }
-    const [isFinished, setIsFinished] = useState(true)
+    const [isFinished, setIsFinished] = useState(false)
+    const [results, setResults] = useState({}) // { [id] : 'success' 'error' }
 
     const onAnswerClickHandler = (answerId) => {
         const question = quiz[activeQuestion]
 
         if (question.rightAnswerId === answerId) {
+            if (!results[question.id]) {
+                results[question.id] = 'success'
+            }
+            
             setAnswerState({[answerId]: 'success'})
+            setResults(results)
 
             const timeout = window.setTimeout(() => {
                 if (isQuizFinished()) {
@@ -49,24 +55,34 @@ function Quiz() {
                 window.clearTimeout(timeout)
             }, 1000)
         } else {
+            results[question.id] = 'error'
             setAnswerState({[answerId]: 'error'})
+            setResults(results)
         }
     }
-    
 
     function isQuizFinished() {
         return activeQuestion + 1 === quiz.length
     }
 
+    function onRetryHandler() {
+        setActiveQuestion(0)
+        setAnswerState(null)
+        setIsFinished(false)
+        setResults({})
+    }
+
     return (
-        <div className={classes.Quiz}>
-            <div className={classes.QuizWrapper}>
+        <div className={classes.quiz}>
+            <div className={classes.quizWrapper}>
                 <h1>Answer to all questions:</h1>
 
                 {
                     isFinished 
                         ? <FinishedQuiz 
-
+                            results={results}
+                            quiz={quiz}
+                            onRetry={onRetryHandler}
                         />
                         : <ActivQuiz 
                             question={quiz[activeQuestion].question}

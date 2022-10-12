@@ -1,7 +1,7 @@
 import classes from './AnswerItem.module.css'
 
 function AnswerItem({ answer, onAnswerClick, rightAnswer, state }) {
-    const cls = [classes.AnswerItem]
+    const cls = [classes.answerItem]
 
     if (state) {
         cls.push(classes[state])

@@ -1,20 +1,40 @@
 import classes from './FinishedQuiz.module.css'
+import Button from '../UI/Button/Button'
 
-function FinishedQuiz() {
+function FinishedQuiz(props) {
+    const successCount = Object.keys(props.results).reduce((total, key) => {
+        if (props.results[key] === 'success') {
+            total++
+        }
+
+        return total
+    }, 0)
+
     return (
-        <div className={classes.FinishedQuiz}>
+        <div className={classes.finishedQuiz}>
             <ul>
-                <li>
-                    <strong>1.</strong>
-                    How are you?
-                    <i className={''}></i>
-                </li>
+                { props.quiz.map((quizItem, index) => {
+                    const cls = [
+                        'fa',
+                        props.results[quizItem.id] === 'error' ? 'fa-times' : 'fa-check',
+                        classes[props.results[quizItem.id]]
+                    ]
+
+                    return (
+                        <li key={index}>
+                            <strong>{ index + 1 }</strong>.&nbsp;
+                            {quizItem.question}&nbsp;
+                            <i className={cls.join(' ')}></i>
+                        </li>
+                    )
+                }) }
             </ul>
 
-            <p>Correct answers: 4 from 10</p>
+            <p>Correct answers: {successCount} from {props.quiz.length}</p>
 
             <div>
-                <button>Repeat</button>
+                <Button onClick={props.onRetry} type="primary">Repeat</Button>
+                <Button type="success">Go back to tests</Button>
             </div>
         </div>
     )
