@@ -2,7 +2,6 @@ import React from 'react'
 import classes from './AnswersList.module.css'
 import AnswerItem from './AnswerItem/AnswerItem'
 
-
 function AnswersList({ answers, onAnswerClick, rightAnswer, state }) { 
     return(
         <ul className={classes.answersList}>
