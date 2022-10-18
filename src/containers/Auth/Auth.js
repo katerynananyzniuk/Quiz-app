@@ -85,9 +85,7 @@ function Auth() {
 
     newFormControls[controlName] = newControl
 
-    setFormControls(() => {
-      return newFormControls
-    })
+    setFormControls(newFormControls)
     setIsFormValid(() => {
       let isFormValid = true
 
