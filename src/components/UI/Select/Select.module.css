@@ -1,12 +1,13 @@
 .select {
   margin-bottom: 15px;
+  display: flex;
 }
 
 .select label {
-  margin: 0 0 3px 0;
+  margin: 0 3px 3px 0;
   padding: 0;
   font-weight: bold;
-  display: block;
+  width: 100%;
 }
 
 .select select {

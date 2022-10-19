@@ -5,7 +5,7 @@ import { NavLink } from 'react-router-dom'
 const links = [
   { to:'/', label:'Test list', end: true },
   { to:'/auth', label:'Autorization', end: false },
-  { to:'/quiz-creator', label:'Create test', end: true }
+  { to:'/quiz-creator', label:'Test creation', end: true }
 ]
 
 const activeClassName = classes.active

@@ -2,8 +2,9 @@ import classes from './QuizCreator.module.css'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Input/Input'
 import Select from '../../components/UI/Select/Select'
-import { Fragment, useState } from 'react'
+import { Fragment, useState, useEffect } from 'react'
 import {createControl, validate, validateForm} from '../../form/formFramework'
+import axios from '../../axios/axios-quiz'
 
 function createOptionControl(number) {
   return createControl({
@@ -16,7 +17,7 @@ function createOptionControl(number) {
 function createFormControls() {
   return {
     question: createControl({
-      label: 'Add a question :',
+      label: 'Question :',
       errorMessage: 'The question shouldn\'t be empty'
     }, {required: true}),
     option1: createOptionControl(1),
@@ -62,9 +63,19 @@ function QuizCreator() {
     setIsFormValid(false)
   }
   
-  function createQuizHandler() {
-    console.log('fuiz:', quiz);
-    // todo: server
+  async function createQuizHandler() {
+    try {
+      const response = await axios.post('/quizzes.json', quiz)
+      console.log(response.data)
+
+      setQuiz([])
+      setFormControls(() => createFormControls())
+      setRightAnswerIId(1)
+      setIsFormValid(false)
+      
+    } catch(e) {
+      console.log(e)
+    }
   }
   
   function onChangeHandler(event, controlName) {
@@ -113,7 +124,7 @@ function QuizCreator() {
   return (
     <div className={classes.quizCreator}>
       <div>
-        <h1>Create a quiz</h1>
+        <h1>Test creation</h1>
 
         <form onSubmit={submitHandler}>
 
@@ -143,7 +154,7 @@ function QuizCreator() {
             onClick={createQuizHandler}
             disabled={quiz.length === 0}
           >
-            Create a quiz
+            Create a test
           </Button>
         </form>
       </div>

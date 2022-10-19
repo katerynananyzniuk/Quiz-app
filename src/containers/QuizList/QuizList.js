@@ -1,18 +1,51 @@
 import { NavLink } from 'react-router-dom'
 import classes from './QuizList.module.css'
+import axios from '../../axios/axios-quiz'
+import {useState, useEffect} from 'react'
+import Loader from '../../components/UI/Loader/Loader'
 
 function QuizList() {
+  const [quizzes, setQuizzes] = useState([])
+  const [loading, setLoading] = useState(true)
 
-  function renderQuizes() {
-    return [1, 2, 3].map((quiz, index) => {
+  async function fetchData() {
+    const response = await axios.get('/quizzes.json')
+    
+    if (response.data) {
+
+      const quizzes = []
+      Object.keys(response.data).forEach((key, index) => {
+        quizzes.push({
+          id: key,
+          name: `Test #${index + 1}`
+        })
+      })
+
+      setQuizzes(quizzes)
+      setLoading(false)
+    }
+    else { setLoading(false) }
+
+  }
+
+  useEffect(() => {
+    try {
+      fetchData()
+    } catch(e) {
+      console.log(e)
+    }
+  }, [])
+  
+  function renderQuizzes() {
+    return quizzes.map(quiz => {
       return (
         <li
-          key={index}
+          key={quiz.id}
         >
           <NavLink
-            to={'/quiz/' + quiz}
+            to={'/quiz/' + quiz.id}
           >
-            Test {quiz}
+            {quiz.name}
           </NavLink>
         </li>
       )
@@ -24,9 +57,15 @@ function QuizList() {
       <div>
         <h1>Test list</h1>
 
-        <ul>
-          { renderQuizes() }
-        </ul>
+        { 
+          loading
+          ? <Loader /> 
+          : quizzes.length
+            ? <ul>
+                { renderQuizzes() }
+              </ul>
+            : <div className={classes.noQuizzes}>No quizzes. Please create a new one</div>
+        }
       </div>
     </div>
   )

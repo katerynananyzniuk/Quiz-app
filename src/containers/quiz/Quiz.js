@@ -1,39 +1,39 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import classes from './Quiz.module.css'
 import ActivQuiz from '../../components/ActivQuiz/ActivQuiz'
 import FinishedQuiz from '../../components/FinishedQuiz/FinishedQuiz'
+import { useParams } from 'react-router-dom'
+import axios from '../../axios/axios-quiz'
+import Loader from '../../components/UI/Loader/Loader'
 
 function Quiz() {
-  const defaultQuiz = [
-    {
-      question: 'What color is the sky?',
-      rightAnswerId: 2,
-      id: 1,
-      answers: [
-        {id: 1, text: 'black'},
-        {id: 2, text: 'blue'},
-        {id: 3, text: 'red'},
-        {id: 4, text: 'green'},
-      ]
-    },
-    {
-      question: 'What does a lemon taste like?',
-      rightAnswerId: 3,
-      id: 2,
-      answers: [
-        {id: 1, text: 'sweet'},
-        {id: 2, text: 'bitter'},
-        {id: 3, text: 'sour'},
-        {id: 4, text: 'salty'},
-      ]
-    }
-  ]
+  const {quizId} = useParams()
+  console.log('Quiz id:', quizId)
 
-  const [quiz, setQuiz] = useState(defaultQuiz)
+  const [quiz, setQuiz] = useState([])
   const [activeQuestion, setActiveQuestion] = useState(0)
   const [answerState, setAnswerState] = useState(null) // { [id] : 'success' 'error' }
   const [isFinished, setIsFinished] = useState(false)
   const [results, setResults] = useState({}) // { [id] : 'success' 'error' }
+  const [loading, setLoading] = useState(true)
+
+  async function fetchData() {
+    const response = await axios.get(`/quizzes/${quizId}.json`)
+    console.log('response:', response)
+
+    const quiz = response.data
+
+    setQuiz(quiz)
+    setLoading(false)
+  }
+
+  useEffect(() => {
+    try {
+      fetchData()
+    } catch(e) {
+      console.log(e)
+    }
+  },[])
 
   const onAnswerClickHandler = (answerId) => {
     const question = quiz[activeQuestion]
@@ -46,20 +46,20 @@ function Quiz() {
       setAnswerState({[answerId]: 'success'})
       setResults(results)
 
-      const timeout = window.setTimeout(() => {
-        if (isQuizFinished()) {
-          setIsFinished(true)
-        } else {
-          setActiveQuestion( activeQuestion + 1 )
-          setAnswerState(null)
-        }
-        window.clearTimeout(timeout)
-      }, 1000)
     } else {
       results[question.id] = 'error'
       setAnswerState({[answerId]: 'error'})
       setResults(results)
     }
+    const timeout = window.setTimeout(() => {
+      if (isQuizFinished()) {
+        setIsFinished(true)
+      } else {
+        setActiveQuestion( activeQuestion + 1 )
+        setAnswerState(null)
+      }
+      window.clearTimeout(timeout)
+    }, 1000)
   }
 
   function isQuizFinished() {
@@ -73,29 +73,34 @@ function Quiz() {
     setResults({})
   }
 
+  useEffect(() => {
+
+  }, [])
+
   return (
     <div className={classes.quiz}>
       <div className={classes.quizWrapper}>
         <h1>Answer to all questions:</h1>
 
         {
-          isFinished 
-            ? <FinishedQuiz 
-                results={results}
-                quiz={quiz}
-                onRetry={onRetryHandler}
-              />
-            : <ActivQuiz 
-                question={quiz[activeQuestion].question}
-                answers={quiz[activeQuestion].answers}
-                rightAnswer={quiz[activeQuestion].rightAnswerId}
-                onAnswerClick={onAnswerClickHandler}
-                quizLength={quiz.length}
-                questionNumber={activeQuestion + 1}
-                state={answerState}
-              />
+          loading
+            ? <Loader />
+            : isFinished 
+              ? <FinishedQuiz 
+                  results={results}
+                  quiz={quiz}
+                  onRetry={onRetryHandler}
+                />
+              : <ActivQuiz 
+                  question={quiz[activeQuestion].question}
+                  answers={quiz[activeQuestion].answers}
+                  rightAnswer={quiz[activeQuestion].rightAnswerId}
+                  onAnswerClick={onAnswerClickHandler}
+                  quizLength={quiz.length}
+                  questionNumber={activeQuestion + 1}
+                  state={answerState}
+                />
         }
-
       </div>
     </div>
   )
