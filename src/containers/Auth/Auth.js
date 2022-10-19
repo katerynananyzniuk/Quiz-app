@@ -2,6 +2,7 @@ import classes from './Auth.module.css'
 import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Input/Input'
 import {useState} from 'react'
+import axios from 'axios'
 
 function validateEmail(email) {
   return String(email)
@@ -41,12 +42,32 @@ function Auth() {
   const [formControls, setFormControls] = useState(defaultValues)
   const [isFormValid, setIsFormValid] = useState(false)
 
-  function loginHandler() {
-
+  async function signInHandler() {
+    const authData = {
+      email: formControls.email.value,
+      password: formControls.password.value,
+      returnSecureToken: true
+    }
+    try {
+      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDTcRCyGSIJx7I18fThAqCZg8gF0aWwmsA', authData)
+      console.log(response.data)
+    } catch(e) {
+      console.log(e)
+    }
   }
   
-  function signUpHandler() {
-
+  async function signUpHandler() {
+    const authData = {
+      email: formControls.email.value,
+      password: formControls.password.value,
+      returnSecureToken: true
+    }
+    try {
+      const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDTcRCyGSIJx7I18fThAqCZg8gF0aWwmsA', authData)
+      console.log(response.data)
+    } catch(e) {
+      console.log(e)
+    }
   }
 
   function submitHandler(event) {
@@ -129,7 +150,7 @@ function Auth() {
 
           <Button 
             type="success"
-            onClick={loginHandler}
+            onClick={signInHandler}
             disabled={!isFormValid}
           >
             Log in
