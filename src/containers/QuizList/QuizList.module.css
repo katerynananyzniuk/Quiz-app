@@ -34,3 +34,29 @@
 .noQuizzes {
   color: #fff;
 }
+
+.deleteTest {
+  padding: 0 5px;
+  color: #fff;
+  margin-left: 10px;
+  cursor: pointer;
+}
+
+.deleteTest:hover, .active {
+  color: #363636;
+}
+
+.deleteBtn {
+  margin: 50px 0 20px;
+  border: none;
+  background: none;
+  color:  #fff;
+  opacity: .7;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.deleteBtn:hover, .active {
+  color: #363636;
+  opacity: 1;
+}

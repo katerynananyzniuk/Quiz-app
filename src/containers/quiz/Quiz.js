@@ -8,7 +8,6 @@ import Loader from '../../components/UI/Loader/Loader'
 
 function Quiz() {
   const {quizId} = useParams()
-  console.log('Quiz id:', quizId)
 
   const [quiz, setQuiz] = useState([])
   const [activeQuestion, setActiveQuestion] = useState(0)
@@ -19,9 +18,8 @@ function Quiz() {
 
   async function fetchData() {
     const response = await axios.get(`/quizzes/${quizId}.json`)
-    console.log('response:', response)
 
-    const quiz = response.data
+    const quiz = response.data.test
 
     setQuiz(quiz)
     setLoading(false)
@@ -72,10 +70,6 @@ function Quiz() {
     setIsFinished(false)
     setResults({})
   }
-
-  useEffect(() => {
-
-  }, [])
 
   return (
     <div className={classes.quiz}>

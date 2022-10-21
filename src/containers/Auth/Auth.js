@@ -50,7 +50,7 @@ function Auth() {
     }
     try {
       const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDTcRCyGSIJx7I18fThAqCZg8gF0aWwmsA', authData)
-      console.log(response.data)
+      console.log("LogIn data:", response.data)
     } catch(e) {
       console.log(e)
     }
@@ -64,7 +64,7 @@ function Auth() {
     }
     try {
       const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyDTcRCyGSIJx7I18fThAqCZg8gF0aWwmsA', authData)
-      console.log(response.data)
+      console.log("SignUp data:", response.data)
     } catch(e) {
       console.log(e)
     }

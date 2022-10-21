@@ -5,6 +5,7 @@ import Select from '../../components/UI/Select/Select'
 import { Fragment, useState, useEffect } from 'react'
 import {createControl, validate, validateForm} from '../../form/formFramework'
 import axios from '../../axios/axios-quiz'
+import { useNavigate } from 'react-router-dom'
 
 function createOptionControl(number) {
   return createControl({
@@ -28,16 +29,20 @@ function createFormControls() {
 }
 
 function QuizCreator() {
+  const navigate = useNavigate()
+
   const [quiz, setQuiz] = useState([])
   const [formControls, setFormControls] = useState(() => createFormControls())
   const [rightAnswerId, setRightAnswerIId] = useState(1)
   const [isFormValid, setIsFormValid] = useState(false)
+  const [testName, setTestName] = useState('')
+  const [test, setTest] = useState({})
 
   function submitHandler(event) {
     event.preventDefault()
   }
 
-  function addQuestionHandler(event) {
+  function addQuestionHandler() {
     const newQuiz = quiz.concat()
     const index = quiz.length + 1
 
@@ -56,8 +61,9 @@ function QuizCreator() {
     }
 
     newQuiz.push(questionItem)
-
+    
     setQuiz(newQuiz)
+    setTest({test: newQuiz, testName: testName})
     setFormControls(createFormControls())
     setRightAnswerIId(1)
     setIsFormValid(false)
@@ -65,32 +71,32 @@ function QuizCreator() {
   
   async function createQuizHandler() {
     try {
-      const response = await axios.post('/quizzes.json', quiz)
-      console.log(response.data)
-
+      const response = await axios.post('/quizzes.json', test)
       setQuiz([])
       setFormControls(() => createFormControls())
       setRightAnswerIId(1)
       setIsFormValid(false)
-      
+      setTestName('')
+      setTest({})
+      navigate('/')
     } catch(e) {
       console.log(e)
     }
   }
   
   function onChangeHandler(event, controlName) {
-    const newFormControls = { ...formControls }
-    const newControl = { ...formControls[controlName] }
+    const controls = { ...formControls }
+    const control = { ...formControls[controlName] }
 
-    newControl.touched = true
-    newControl.value = event.target.value
-    newControl.valid = validate(newControl.value, newControl.validation)
+    control.touched = true
+    control.value = event.target.value
+    control.valid = validate(control.value, control.validation)
 
-    newFormControls[controlName] = newControl
+    controls[controlName] = control
 
-    setFormControls(newFormControls)
+    setFormControls(controls)
     setIsFormValid(() => {
-      return validateForm(newFormControls)
+      return validateForm(controls)
     })
   }
 
@@ -127,6 +133,14 @@ function QuizCreator() {
         <h1>Test creation</h1>
 
         <form onSubmit={submitHandler}>
+          
+          <div className={classes.testName}>
+            <Input
+              label="Test name:"
+              value={testName}
+              onChange={event => setTestName(event.target.value)}
+            />
+          </div>
 
           { renderInputs() }
 
@@ -142,20 +156,35 @@ function QuizCreator() {
             ]}
           />
 
-          <Button
-            type="primary"
-            onClick={addQuestionHandler}
-            disabled={!isFormValid}
-          >
-            Add a question
-          </Button>
-          <Button
-            type="success"
-            onClick={createQuizHandler}
-            disabled={quiz.length === 0}
-          >
-            Create a test
-          </Button>
+          <div className={classes.formSubmit}>
+            <div className={classes.btnGroup}>
+              <Button
+                type="primary"
+                onClick={addQuestionHandler}
+                disabled={!isFormValid}
+                >
+                Add a question
+              </Button>
+
+              <Button
+                type="success"
+                onClick={createQuizHandler}
+                disabled={quiz.length === 0}
+                >
+                Create a test
+              </Button>
+            </div>
+
+            { quiz.length
+              ? <div>
+                  {quiz.length}&nbsp;
+                  {quiz.length > 1 ? 'questions' : 'question'}&nbsp;
+                  <span className={classes.success}>added</span>
+                </div>
+              : null
+            }
+          </div>
+
         </form>
       </div>
     </div>

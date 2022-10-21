@@ -1,7 +1,6 @@
 .quizCreator {
   display: flex;
   justify-content: center;
-  padding-top: 50px;
   flex-grow: 1;
   width: 100%;
   background: linear-gradient(210deg, #0868bc 0%, #35cb78cc 100%);
@@ -26,3 +25,21 @@
   border: 1px solid #fff;
 }
 
+.formSubmit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.btnGroup {
+  gap: 0;
+}
+
+.success {
+  color: rgba(161, 240, 69, .7);
+}
+
+.testName {
+  text-align: center;
+}
