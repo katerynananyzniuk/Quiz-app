@@ -3,6 +3,7 @@ import Button from '../../components/UI/Button/Button'
 import Input from '../../components/UI/Input/Input'
 import {useState} from 'react'
 import axios from 'axios'
+import { useNavigate } from 'react-router-dom'
 
 function validateEmail(email) {
   return String(email)
@@ -13,6 +14,8 @@ function validateEmail(email) {
 }
 
 function Auth() {
+  const navigate = useNavigate()
+
   const defaultValues = {
     email: {
       value: '',
@@ -30,7 +33,7 @@ function Auth() {
       value: '',
       type: 'password',
       label: 'Password',
-      errorMessage: 'Enter password correctly',
+      errorMessage: 'Wrong password. Use 6 or more characters.',
       valid: false,
       touched: false,
       validation: {
@@ -41,6 +44,8 @@ function Auth() {
   }
   const [formControls, setFormControls] = useState(defaultValues)
   const [isFormValid, setIsFormValid] = useState(false)
+  const [isSignIn, setIsSignIn] = useState(null)
+  const [isSignUp, setIsSignUp] = useState(true)
 
   async function signInHandler() {
     const authData = {
@@ -51,8 +56,12 @@ function Auth() {
     try {
       const response = await axios.post('https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyDTcRCyGSIJx7I18fThAqCZg8gF0aWwmsA', authData)
       console.log("LogIn data:", response.data)
+      navigate('/')
     } catch(e) {
       console.log(e)
+      if (e.response.status === 400) {
+        setIsSignUp(false)
+      }
     }
   }
   
@@ -148,20 +157,32 @@ function Auth() {
         >
           { renderInputs() }
 
-          <Button 
-            type="success"
-            onClick={signInHandler}
-            disabled={!isFormValid}
-          >
-            Log in
-          </Button>
-          <Button
-            type="primary"
-            onClick={signUpHandler}
-            disabled={!isFormValid}
-          >
-            Sign up
-          </Button>
+          <div className={classes.formSubmit}>
+            <div className={classes.btnGroup}>
+              <Button 
+                type="success"
+                onClick={signInHandler}
+                disabled={!isFormValid}
+              >
+                Sign in
+              </Button>
+              <Button
+                type="primary"
+                onClick={signUpHandler}
+                disabled={!isFormValid}
+              >
+                Sign up
+              </Button>
+            </div>
+            { !isSignUp
+              ? <div className={classes.error}>
+                  You are not&nbsp;
+                  <span className={classes.primary}>Sign up</span>
+                </div>
+              : null
+            }
+          </div>
+
         </form>
       </div>
     </div>

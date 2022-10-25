@@ -5,6 +5,7 @@
   flex-grow: 1;
   width: 100%;
   background: linear-gradient(120deg, #0868bc 0%, #35cb78cc 100%);
+  color: #fff;
 }
 
 .auth > div {
@@ -24,4 +25,23 @@
   padding: 30px 25px;
   border-radius: 5px;
   border: 2px solid #fff;
+}
+
+.formSubmit {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.btnGroup {
+  gap: 0;
+}
+
+.error {
+  color: rgba(240, 87, 140, 1);
+}
+
+.primary {
+  color: #124F86;
 }
